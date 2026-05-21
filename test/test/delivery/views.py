@@ -32,12 +32,30 @@ def register(request):
         form = SimpleUserCreationForm()
     return render(request, 'delivery/register.html', {'form': form})
 
-# API View (إرجاع البيانات بصيغة JSON)
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import DeliverySerializer
+
+# API View (إرجاع البيانات بصيغة JSON ودعم إنشاء شحنات جديدة)
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def delivery_api(request):
-    # جلب جميع البيانات من قاعدة البيانات
-    deliveries = list(Delivery.objects.values())
-    # إرجاع البيانات بصيغة JSON
-    return JsonResponse({'deliveries': deliveries}, safe=False)
+    if request.method == 'GET':
+        # جلب جميع البيانات من قاعدة البيانات
+        deliveries = Delivery.objects.all().order_by('-id')
+        serializer = DeliverySerializer(deliveries, many=True)
+        # إرجاع البيانات بصيغة JSON
+        return Response({'deliveries': serializer.data})
+        
+    elif request.method == 'POST':
+        # استقبال البيانات من فلاتر وتخزينها
+        serializer = DeliverySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ==========================================
 # Class-Based Views (النسخة الجديدة بالكلاسات)
