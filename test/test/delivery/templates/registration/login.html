@@ -1,0 +1,26 @@
+{% extends 'delivery/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center py-4">
+                <h3 class="mb-0 font-weight-bold">🔑 تسجيل الدخول للمنصة</h3>
+                <p class="text-muted small mb-0 mt-2">مرحباً بك مجدداً، أدخل تفاصيل حسابك للمتابعة</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 mt-3">دخول آمن</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-secondary">ليس لديك حساب؟ <a href="{% url 'register' %}" class="text-success text-decoration-none fw-bold">تسجيل مستخدم جديد</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

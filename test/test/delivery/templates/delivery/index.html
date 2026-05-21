@@ -1,0 +1,52 @@
+{% extends 'delivery/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">📊 إدارة الشحنات المجدولة</h2>
+    {% if user.is_authenticated %}
+        <a href="{% url 'add_delivery' %}" class="btn btn-primary">➕ إدراج شحنة جديدة</a>
+    {% endif %}
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>رقم التتبع للطلب</th>
+                <th>الاسم الكامل للمستلم</th>
+                <th>وجهة التوصيل والمنطقة</th>
+                <th>رقم التواصل الهاتفي</th>
+                <th>حالة الشحنة</th>
+                {% if user.is_authenticated %}
+                <th>الإجراءات</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in deliveries %}
+            <tr>
+                <td>{{ d.tracking_number }}</td>
+                <td>{{ d.recipient_full_name }}</td>
+                <td>{{ d.delivery_destination }}</td>
+                <td>{{ d.contact_number }}</td>
+                <td>
+                    <span class="badge {% if d.shipment_status == 'Delivered' %}bg-success{% elif d.shipment_status == 'Cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                        {{ d.get_shipment_status_display }}
+                    </span>
+                </td>
+                {% if user.is_authenticated %}
+                <td>
+                    <a href="{% url 'update_delivery' d.id %}" class="btn btn-sm btn-outline-secondary">تعديل</a>
+                    <a href="{% url 'delete_delivery' d.id %}" class="btn btn-sm btn-outline-danger">حذف</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if user.is_authenticated %}6{% else %}5{% endif %}" class="text-center text-muted py-3">لا توجد طلبات حالياً.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

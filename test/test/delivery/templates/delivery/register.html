@@ -1,0 +1,26 @@
+{% extends 'delivery/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center py-4">
+                <h3 class="mb-0 font-weight-bold">👤 تسجيل حساب جديد</h3>
+                <p class="text-muted small mb-0 mt-2">يرجى ملء الحقول أدناه لإنشاء حساب والوصول للمنصة</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 mt-3">انضم الآن</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-secondary">لديك حساب بالفعل؟ <a href="{% url 'login' %}" class="text-success text-decoration-none fw-bold">بوابة تسجيل الدخول</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
